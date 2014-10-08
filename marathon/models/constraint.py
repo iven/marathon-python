@@ -4,6 +4,8 @@ from ..exceptions import InvalidOperatorError
 UNIQUE_OPERATOR = 'UNIQUE'
 CLUSTER_OPERATOR = 'CLUSTER'
 GROUP_BY_OPERATOR = 'GROUP_BY'
+LIKE_OPERATOR = 'LIKE'
+UNLIKE_OPERATOR = 'UNLIKE'
 
 
 class MarathonConstraint(object):
@@ -12,14 +14,16 @@ class MarathonConstraint(object):
     See http://mesosphere.io/2013/11/22/marathon-a-mesos-framework-adds-placement-constraints/
 
     :param str field: constraint operator target
-    :param str operator: must be one of [UNIQUE, CLUSTER, GROUP_BY]
+    :param str operator: must be one of [UNIQUE, CLUSTER, GROUP_BY, LIKE, UNLIKE]
     :param value: [optional] if `operator` is CLUSTER, constrain tasks to servers where `field` == `value`.
-    If `operator` is GROUP_BY, place at most `value` tasks per group
+    If `operator` is GROUP_BY, place at most `value` tasks per group. If `operator`
+    is `LIKE` or `UNLIKE`, filter servers using regexp.
     :type value: str, int, or None
     """
 
     def __init__(self, field, operator, value=None):
-        if not operator in [UNIQUE_OPERATOR, CLUSTER_OPERATOR, GROUP_BY_OPERATOR]:
+        if not operator in [UNIQUE_OPERATOR, CLUSTER_OPERATOR,
+                            GROUP_BY_OPERATOR, LIKE_OPERATOR, UNLIKE_OPERATOR]:
             raise InvalidOperatorError(operator)
 
         self.field = field
